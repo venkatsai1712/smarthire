@@ -9,7 +9,7 @@ function SignInButton({ route, children }) {
     >
       {children}
     </button>
-  );lo
+  );
 }
 
 export default SignInButton;
