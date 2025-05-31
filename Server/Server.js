@@ -23,14 +23,16 @@ passport.use(
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       callbackURL: "http://localhost:3000/sign-in/callback",
+      passReqToCallback: true,
     },
-    (accessToken, refreshToken, profile, done) => {
-      return done(null, profile);
+    (req, accessToken, refreshToken, profile, done) => {
+      return done(null, { ...profile, role: req.session.role });
     }
   )
 );
 
 passport.serializeUser((user, done) => {
+  console.log(user)
   return done(null, user);
 });
 
@@ -52,6 +54,12 @@ app.use(passport.session());
 
 app.get(
   "/sign-in/:role",
+  (req, res, next) => {
+    if (req.params.role === "recruiter" || req.params.role === "candidate") {
+      req.session.role = req.params.role;
+    }
+    next();
+  },
   passport.authenticate("google", { scope: ["profile", "email"] })
 );
 
@@ -60,7 +68,7 @@ app.get(
   passport.authenticate("google"),
   (err, req, res, next) => {
     if (err.name === "TokenError") {
-      res.redirect("http://localhost:5173/dashboard");
+      res.redirect("http://localhost:5173/google-sign-in");
     }
   }
 );
@@ -72,10 +80,12 @@ app.get("/sign-in/failure", (req, res) => {
 app.get("/get-user-details", (req, res) => {
   if (req.isAuthenticated()) {
     console.log("Auth");
+    console.log(req.session);
     res.json(req.user);
   } else {
     console.log("No Auth");
-    res.status(401).json({error:"No auth"});
+    console.log(req.session)
+    res.status(401).json({ error: "No auth" });
   }
 });
 

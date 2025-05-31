@@ -19,7 +19,7 @@ function Dashboard() {
   }, []);
   return (
     <>
-      <h1>Candidate</h1>
+      <h1>Recruiter</h1>
     </>
   );
 }
