@@ -13,7 +13,7 @@ function GoogleSignIn() {
         const user = await res.data;
         setRole(user.role);
       } catch (err) {
-        console.error("Error fetching user details:", err);
+        console.error("Error Fetching User Details: ", err);
       }
     }
     redirectingToDashboard();

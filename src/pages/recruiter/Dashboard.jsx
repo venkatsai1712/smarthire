@@ -19,7 +19,7 @@ function Dashboard() {
   }, []);
   return (
     <>
-      <h1>Recruiter</h1>
+      <h1 className="text-center">Recruiter</h1>
     </>
   );
 }

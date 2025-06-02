@@ -12,14 +12,14 @@ function Dashboard() {
         );
         console.log(response.data);
       } catch (error) {
-        console.error("Error fetching user details:", error);
+        console.error("Error Fetching User Details: ", error);
       }
     }
     fetchData();
   }, []);
   return (
     <>
-      <h1>Candidate</h1>
+      <h1 className="text-center">Candidate</h1>
     </>
   );
 }

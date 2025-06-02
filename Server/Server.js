@@ -16,6 +16,17 @@ app.use(
   })
 );
 app.use(express.json());
+app.use(
+  session({
+    secret: "mysessionsecret",
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false, sameSite: "lax", maxAge: 24 * 60 * 60 * 1000 },
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 passport.use(
   new GoogleStrategy(
@@ -32,25 +43,12 @@ passport.use(
 );
 
 passport.serializeUser((user, done) => {
-  console.log(user)
   return done(null, user);
 });
 
 passport.deserializeUser((user, done) => {
   return done(null, user);
 });
-
-app.use(
-  session({
-    secret: "mysessionsecret",
-    resave: false,
-    saveUninitialized: false,
-    cookie: { secure: false },
-  })
-);
-
-app.use(passport.initialize());
-app.use(passport.session());
 
 app.get(
   "/sign-in/:role",
@@ -67,9 +65,14 @@ app.get(
   "/sign-in/callback",
   passport.authenticate("google"),
   (err, req, res, next) => {
-    if (err.name === "TokenError") {
-      res.redirect("http://localhost:5173/google-sign-in");
-    }
+    req.session.save((error) => {
+      if (err.name === "TokenError") {
+        res.redirect("http://localhost:5173/google-sign-in");
+      }
+      if (error) {
+        console.log("Session Saving Error: " + error);
+      }
+    });
   }
 );
 
@@ -79,13 +82,11 @@ app.get("/sign-in/failure", (req, res) => {
 
 app.get("/get-user-details", (req, res) => {
   if (req.isAuthenticated()) {
-    console.log("Auth");
-    console.log(req.session);
+    console.log("Authenticated User");
     res.json(req.user);
   } else {
-    console.log("No Auth");
-    console.log(req.session)
-    res.status(401).json({ error: "No auth" });
+    console.log("Not Authenticated User");
+    res.status(401).json({ error: "Not Authenticated User" });
   }
 });
 
