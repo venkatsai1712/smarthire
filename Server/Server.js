@@ -217,12 +217,26 @@ app.get("/get-applicants", async (req, res) => {
           path: "postedId",
           match: { _id: req.user.user._id },
         })
-        .populate("applicantId").populate("jobId");
+        .populate("applicantId")
+        .populate("jobId");
       res.json(result);
     } catch (err) {
       console.log(err);
     }
   }
+});
+
+app.get("/logout", (req, res, next) => {
+  req.logout((err) => {
+    if (err) return next(err);
+    req.session.destroy((error) => {
+      if (error) {
+        return res.status(500);
+      }
+      res.clearCookie("connect.sid");
+      res.json({message:"Success Logout"});
+    });
+  });
 });
 
 app.listen(port, () => {

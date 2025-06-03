@@ -4,6 +4,7 @@ import RecruiterDashboard from "../pages/recruiter/Dashboard";
 import CandidateDashboard from "../pages/candidate/Dashboard";
 function GoogleSignIn() {
   const [role, setRole] = useState("");
+  const [loadState, setLoadState] = useState(true);
   useEffect(() => {
     async function redirectingToDashboard() {
       try {
@@ -14,6 +15,8 @@ function GoogleSignIn() {
         setRole(user.role);
       } catch (err) {
         console.error("Error Fetching User Details: ", err);
+      } finally {
+        setLoadState(false);
       }
     }
     redirectingToDashboard();
@@ -21,16 +24,20 @@ function GoogleSignIn() {
 
   return (
     <>
-      {role === "recruiter" ? (
-        window.location.replace("http://localhost:5173/recruiter/dashboard") && (
-          <RecruiterDashboard />
-        )
-      ) : role === "candidate" ? (
-        window.location.replace("http://localhost:5173/candidate/dashboard") && (
-          <CandidateDashboard />
-        )
+      {loadState ? (
+        <div className="text-center my-4">
+          <div className="loader mx-auto mt-10 w-12 h-12 border-4 border-t-4 border-gray-200 border-t-blue-500 rounded-full animate-spin"></div>
+        </div>
       ) : (
-        <div className="text-2xl font-bold">Loading...</div>
+        <>
+          {role === "recruiter"
+            ? window.location.replace(
+                "http://localhost:5173/recruiter/dashboard"
+              ) && <RecruiterDashboard />
+            : window.location.replace(
+                "http://localhost:5173/candidate/dashboard"
+              ) && <CandidateDashboard />}
+        </>
       )}
     </>
   );

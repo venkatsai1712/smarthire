@@ -18,9 +18,23 @@ function Dashboard() {
     }
     fetchData();
   }, []);
+
+  async function logout() {
+    try {
+      await axios.get("http://localhost:3000/logout", {
+        withCredentials: true,
+      });
+      window.location.href = "/";
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   return (
     <>
       <h1 className="text-center">Candidate</h1>
+      <button onClick={logout}>Logout</button>
+      <br></br>
       <Link to="/candidate/dashboard/job-list" className="text-blue-500">
         Job List
       </Link>

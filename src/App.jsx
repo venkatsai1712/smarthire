@@ -14,10 +14,9 @@ function App() {
             withCredentials: true,
           }
         );
-        console.log("User details:", response.data);
         setUser(response.data.role.toString());
       } catch (error) {
-        console.error("Error fetching user details:", error);
+        console.log("User not found");
       }
     }
     checkUserAuthentication();
