@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
 function Dashboard() {
   useEffect(() => {
     async function fetchData() {
@@ -20,6 +21,9 @@ function Dashboard() {
   return (
     <>
       <h1 className="text-center">Candidate</h1>
+      <Link to="/candidate/dashboard/job-list" className="text-blue-500">
+        Job List
+      </Link>
     </>
   );
 }
