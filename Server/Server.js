@@ -5,19 +5,32 @@ import session from "express-session";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
+import { GridFsStorage } from "multer-gridfs-storage";
+import multer from "multer";
+import Grid from "gridfs-stream";
 dotenv.config();
 const port = process.env.PORT;
 const mongoURI = process.env.MONGO_URI;
 
 const app = express();
-mongoose
-  .connect(mongoURI)
-  .then(() => {
-    console.log("Connected to MongoDB");
-  })
-  .catch((err) => {
-    console.error("MongoDB Connection Error: ", err);
-  });
+const con = mongoose.createConnection(mongoURI);
+
+con.once("open", () => {
+  let gfs = Grid(con.db, mongoose.mongo);
+  gfs.collection("uploads");
+});
+
+const storage = new GridFsStorage({
+  url: mongoURI,
+  file: (req, file) => {
+    return {
+      filename: Date.now() + "_" + file.originalname,
+      bucketName: "uploads",
+    };
+  },
+});
+
+const upload = multer({ storage });
 
 const User = mongoose.model(
   "User",
@@ -226,6 +239,14 @@ app.get("/get-applicants", async (req, res) => {
   }
 });
 
+app.post("/upload-file", upload.single("file"), (req, res) => {
+  try {
+    res.json({ file: "File Uploaded" });
+  } catch (err) {
+    console.log(err);
+  }
+});
+
 app.get("/logout", (req, res, next) => {
   req.logout((err) => {
     if (err) return next(err);
@@ -234,7 +255,7 @@ app.get("/logout", (req, res, next) => {
         return res.status(500);
       }
       res.clearCookie("connect.sid");
-      res.json({message:"Success Logout"});
+      res.json({ message: "Success Logout" });
     });
   });
 });

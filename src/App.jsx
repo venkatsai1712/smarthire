@@ -3,6 +3,7 @@ import SignInButton from "./components/SignInButton";
 import axios from "axios";
 import RecruiterDashboard from "./pages/recruiter/Dashboard";
 import CandidateDashboard from "./pages/candidate/Dashboard";
+import googleLogo from "./assets/images/googleLogo.webp"
 function App() {
   const [user, setUser] = useState("");
   useEffect(() => {

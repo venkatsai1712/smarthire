@@ -52,7 +52,7 @@ function JobList() {
   }
 
   return (
-    <div>
+    <div className="ml-5">
       {loadState ? (
         <div className="text-center my-4">
           <div className="loader mx-auto mt-10 w-12 h-12 border-4 border-t-4 border-gray-200 border-t-blue-500 rounded-full animate-spin"></div>
@@ -62,7 +62,8 @@ function JobList() {
         <>
           <div className="grid grid-cols-3 gap-1 justify-center items-center">
             <h1 className="text-center my-5">Jobs</h1>
-            <select className="w-30"
+            <select
+              className="w-30"
               onChange={(e) => {
                 filterCity(e.target.value);
               }}
@@ -73,7 +74,8 @@ function JobList() {
               <option value="Mumbai">Mumbai</option>
               <option value="Chennai">Chennai</option>
             </select>
-            <select className="w-30"
+            <select
+              className="w-30"
               onChange={(e) => {
                 filterType(e.target.value);
               }}

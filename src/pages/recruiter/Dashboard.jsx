@@ -1,8 +1,10 @@
 import axios from "axios";
-import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
+import Applicants from "../recruiter/Applicants";
 function Dashboard() {
-  useEffect(() => {
+  const [userName,setUserName] = useState("");
+  useEffect(() => { 
     async function fetchData() {
       try {
         const response = await axios.get(
@@ -12,6 +14,8 @@ function Dashboard() {
           }
         );
         console.log(response.data);
+        setUserName(response.data.displayName);
+
       } catch (error) {
         console.error("Error fetching user details:", error);
       }
@@ -31,18 +35,29 @@ function Dashboard() {
   }
 
   return (
-    <>
-      <h1 className="text-center">Recruiter</h1>
-      <button onClick={logout}>Logout</button>
-      <br></br>
-      <Link to="/recruiter/dashboard/post-job" className="text-blue-500">
-        Post a Job
-      </Link>
-      <br></br>
-      <Link to="/recruiter/dashboard/applicants" className="text-blue-500">
-        Applicants
-      </Link>
-    </>
+    <div>
+      <div className="flex justify-between items-center p-5 border-b-1">
+        <div className="text-xl">Dashboard</div>
+        <div className="flex justify-evenly items-center">
+          <Link to="/recruiter/dashboard/post-job" className=" mr-10">
+            Post a Job
+          </Link>
+          <Link to="/recruiter/dashboard/applicants" className=" mr-10">
+            Applicants
+          </Link>
+          <button
+            onClick={logout}
+            className="border-2 rounded p-1 hover:bg-white hover:text-black hover:font-semibold text-sm"
+          >
+            Logout
+          </button>
+        </div>
+      </div>
+      <div>
+        <div className="text-2xl m-5">Welcome <i>{userName}</i> !</div>
+        <Applicants/>
+      </div>
+    </div>
   );
 }
 

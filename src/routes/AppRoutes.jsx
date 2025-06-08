@@ -6,6 +6,7 @@ import GoogleSignIn from "../services/GoogleSignIn";
 import PostJob from "../pages/recruiter/PostJob";
 import JobList from "../pages/candidate/JobList";
 import Applicants from "../pages/recruiter/Applicants";
+import UploadResume from "../pages/candidate/UploadResume";
 function AppRoutes() {
   return (
     <Routes>
@@ -14,6 +15,10 @@ function AppRoutes() {
       <Route
         path="/candidate/dashboard"
         element={<CandidateDashboard />}
+      ></Route>
+      <Route
+        path="/candidate/dashboard/upload-resume"
+        element={<UploadResume />}
       ></Route>
       <Route path="/candidate/dashboard/job-list" element={<JobList />}></Route>
       <Route
